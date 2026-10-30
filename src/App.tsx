@@ -18,7 +18,8 @@ function App() {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("rating");
 
@@ -28,12 +29,12 @@ function App() {
         setLoading(true);
         setError(null);
 
-        const data = await fetchDiscoverMovies();
+        const data = await fetchDiscoverMovies(page);
 
         setMovies(data.results);
+        setTotalPages(data.total_pages);
       } catch (err) {
         console.error("Failed to fetch movies:", err);
-
         setError("Unable to load movies. Please try again.");
       } finally {
         setLoading(false);
@@ -41,7 +42,7 @@ function App() {
     };
 
     loadMovies();
-  }, []);
+  }, [page]);
 
   const filteredMovies = useMemo(() => {
     const sortComparators: Record<SortOption, (a: Movie, b: Movie) => number> =
@@ -98,11 +99,63 @@ function App() {
 
           {!loading && !error && (
             <>
-              <div className="mb-4 text-[10px] uppercase tracking-widest text-[#77736B]">
-                Showing {filteredMovies.length} of {movies.length} movies
+              <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
+                <span className="text-[10px] uppercase tracking-widest text-[#77736B]">
+                  Showing {filteredMovies.length} of {movies.length} movies
+                </span>
+
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() =>
+                      setPage((current) => Math.max(1, current - 1))
+                    }
+                    disabled={page === 1}
+                    className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#191916]"
+                  >
+                    Previous
+                  </button>
+
+                  <span className="whitespace-nowrap text-xs uppercase tracking-widest text-[#77736B]">
+                    Page {page} of {totalPages}
+                  </span>
+
+                  <button
+                    onClick={() =>
+                      setPage((current) => Math.min(totalPages, current + 1))
+                    }
+                    disabled={page >= totalPages}
+                    className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#191916]"
+                  >
+                    Next
+                  </button>
+                </div>
               </div>
 
               <MovieGrid movies={filteredMovies} />
+
+              <div className="mt-10 flex items-center justify-center gap-6">
+                <button
+                  onClick={() => setPage((current) => Math.max(1, current - 1))}
+                  disabled={page === 1}
+                  className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#191916]"
+                >
+                  Previous
+                </button>
+
+                <span className="text-xs uppercase tracking-widest text-[#77736B]">
+                  Page {page} of {totalPages}
+                </span>
+
+                <button
+                  onClick={() =>
+                    setPage((current) => Math.min(totalPages, current + 1))
+                  }
+                  disabled={page >= totalPages}
+                  className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7] disabled:cursor-not-allowed disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-[#191916]"
+                >
+                  Next
+                </button>
+              </div>
             </>
           )}
         </section>
