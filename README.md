@@ -75,9 +75,3 @@ The application uses the following environment variable:
 For local development, store your key in `.env.local`.
 
 **Important:** Never commit `.env.local` or other files containing your personal API key. Vite exposes variables prefixed with `VITE_` to browser-side code, so this key is not a server-side secret. Use an appropriate TMDB key and follow TMDB's API usage requirements.
-
-## Acknowledgments
-
-Movie data and poster images are provided by [The Movie Database (TMDB)](https://www.themoviedb.org/).
-
-This product uses the TMDB API but is not endorsed or certified by TMDB.
