@@ -43,14 +43,15 @@ function App() {
     loadMovies();
   }, []);
 
-  const sortComparators: Record<SortOption, (a: Movie, b: Movie) => number> = {
-    rating: (a, b) => b.vote_average - a.vote_average,
-    title: (a, b) => a.title.localeCompare(b.title),
-    newest: (a, b) => b.release_date.localeCompare(a.release_date),
-    oldest: (a, b) => a.release_date.localeCompare(b.release_date),
-  };
-
   const filteredMovies = useMemo(() => {
+    const sortComparators: Record<SortOption, (a: Movie, b: Movie) => number> =
+      {
+        rating: (a, b) => b.vote_average - a.vote_average,
+        title: (a, b) => a.title.localeCompare(b.title),
+        newest: (a, b) => b.release_date.localeCompare(a.release_date),
+        oldest: (a, b) => a.release_date.localeCompare(b.release_date),
+      };
+
     const query = searchQuery.trim().toLowerCase();
 
     const filtered = movies.filter((movie) =>
