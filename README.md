@@ -2,6 +2,10 @@
 
 A responsive movie dashboard built with React, TypeScript, Vite, and Tailwind CSS. Movie data is provided by [The Movie Database (TMDB)](https://www.themoviedb.org/) API.
 
+
+<img width="1272" height="937" alt="Screenshot 2026-10-30 at 18 19 52" src="https://github.com/user-attachments/assets/288fc41b-c65f-4365-9be5-e5e305c766e4" />
+
+
 ## Features
 
 - **Movie discovery:** Fetches movies from TMDB's `/discover/movie` endpoint, filtered by animation genre.
