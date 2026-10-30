@@ -1,8 +1,10 @@
+import type { MovieResponse } from "../types/movie";
+
 const BASE_URL = "https://api.themoviedb.org/3";
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
-export async function fetchDiscoverMovies() {
+export async function fetchDiscoverMovies(): Promise<MovieResponse> {
   if (!API_KEY) {
     throw new Error("TMDB API key is missing");
   }
@@ -21,7 +23,7 @@ export async function fetchDiscoverMovies() {
     throw new Error(`TMDB API error: ${response.status}`);
   }
 
-  const data: unknown = await response.json();
+  const data: MovieResponse = await response.json();
 
   return data;
 }

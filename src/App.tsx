@@ -1,33 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import Header from "./components/Header";
+import MovieGrid from "./components/MovieGrid";
+
 import { fetchDiscoverMovies } from "./services/tmdb";
+import type { Movie } from "./types/movie";
 
 function App() {
-  const [loading, setLoading] = useState(false);
+  const [movies, setMovies] = useState<Movie[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleFetchMovies = async () => {
-    try {
-      setLoading(true);
+  useEffect(() => {
+    const loadMovies = async () => {
+      try {
+        setLoading(true);
+        setError(null);
 
-      const data = await fetchDiscoverMovies();
+        const data = await fetchDiscoverMovies();
 
-      console.log("TMDB Response:", data);
-    } catch (error) {
-      console.error("Failed to fetch movies:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+        setMovies(data.results);
+      } catch (err) {
+        console.error("Failed to fetch movies:", err);
+
+        setError("Unable to load movies. Please try again.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMovies();
+  }, []);
 
   return (
-    <main className="min-h-screen bg-slate-950 text-white flex items-center justify-center">
-      <button
-        onClick={handleFetchMovies}
-        disabled={loading}
-        className="rounded-lg bg-blue-600 px-6 py-3 font-semibold hover:bg-blue-500 disabled:opacity-50"
-      >
-        {loading ? "Fetching movies..." : "Fetch Movies"}
-      </button>
-    </main>
+    <div className="min-h-screen bg-[#F2EFE7]">
+      <Header />
+
+      <main className="mx-auto max-w-7xl px-6 py-12">
+        <section>
+          <div className="mb-6 flex items-center justify-between">
+            <h2 className="text-xs font-bold uppercase tracking-[0.2em]">
+              Featured selection
+            </h2>
+
+            <span className="text-[10px] uppercase tracking-widest text-[#77736B]">
+              Sorted by audience rating
+            </span>
+          </div>
+
+          {loading && (
+            <p className="py-20 text-center text-sm text-[#77736B]">
+              Developing the collection...
+            </p>
+          )}
+
+          {error && (
+            <p className="py-20 text-center text-sm text-[#B83E2E]">{error}</p>
+          )}
+
+          {!loading && !error && <MovieGrid movies={movies} />}
+        </section>
+      </main>
+    </div>
   );
 }
 
