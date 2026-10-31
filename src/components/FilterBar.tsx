@@ -19,8 +19,8 @@ function FilterBar({
         type="search"
         value={searchQuery}
         onChange={(event) => onSearchChange(event.target.value)}
-        placeholder="Search movies..."
-        aria-label="Search movies by title"
+        placeholder="Filter this page by title..."
+        aria-label="Filter movies on this page by title"
         className="w-full border-b border-[#191916]/30 bg-transparent px-1 py-3 text-sm text-[#191916] placeholder:text-[#77736B] outline-none transition-colors focus:border-[#B83E2E] sm:max-w-sm"
       />
 
