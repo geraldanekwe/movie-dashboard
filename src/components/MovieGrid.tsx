@@ -7,7 +7,11 @@ interface MovieGridProps {
 
 function MovieGrid({ movies }: MovieGridProps) {
   if (movies.length === 0) {
-    return <p className="py-20 text-center text-slate-400">No movies found.</p>;
+    return (
+      <p className="py-20 text-center text-sm text-[#77736B]">
+        No movies on this page match your search.
+      </p>
+    );
   }
 
   return (

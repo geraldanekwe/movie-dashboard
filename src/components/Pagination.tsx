@@ -9,27 +9,33 @@ const buttonClass =
 
 function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   return (
-    <div className="flex items-center gap-4">
+    <nav aria-label="Pagination" className="flex items-center gap-4">
       <button
         onClick={() => onPageChange(Math.max(1, page - 1))}
         disabled={page === 1}
+        aria-label="Previous page"
         className={buttonClass}
       >
         Previous
       </button>
 
-      <span className="whitespace-nowrap text-xs uppercase tracking-widest text-[#77736B]">
+      <span
+        aria-live="polite"
+        aria-atomic="true"
+        className="whitespace-nowrap text-xs uppercase tracking-widest text-[#77736B]"
+      >
         Page {page} of {totalPages}
       </span>
 
       <button
         onClick={() => onPageChange(Math.min(totalPages, page + 1))}
         disabled={page >= totalPages}
+        aria-label="Next page"
         className={buttonClass}
       >
         Next
       </button>
-    </div>
+    </nav>
   );
 }
 

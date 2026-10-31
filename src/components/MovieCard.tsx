@@ -9,48 +9,59 @@ const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w342";
 
 function MovieCard({ movie }: MovieCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageFailed, setImageFailed] = useState(false);
+  const [showOverview, setShowOverview] = useState(false);
 
-  const posterUrl = movie.poster_path
-    ? `${IMAGE_BASE_URL}${movie.poster_path}`
-    : null;
+  const posterUrl =
+    movie.poster_path && !imageFailed
+      ? `${IMAGE_BASE_URL}${movie.poster_path}`
+      : null;
 
   const releaseYear = movie.release_date
     ? movie.release_date.slice(0, 4)
     : "N/A";
 
   return (
-    <article
-      tabIndex={0}
-      className="group flex h-full min-w-0 flex-col focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B83E2E]"
-    >
-      <div
-        className={`relative aspect-[2/3] overflow-hidden bg-[#DED9CE] ${
+    <article className="group flex h-full min-w-0 flex-col">
+      <button
+        type="button"
+        onClick={() => setShowOverview((open) => !open)}
+        onMouseLeave={() => setShowOverview(false)}
+        onBlur={() => setShowOverview(false)}
+        aria-expanded={showOverview}
+        aria-label={`${movie.title}, ${showOverview ? "hide" : "show"} synopsis`}
+        className={`relative block aspect-[2/3] w-full overflow-hidden bg-[#DED9CE] p-0 text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#B83E2E] ${
           posterUrl && !imageLoaded ? "animate-pulse" : ""
         }`}
       >
         {posterUrl ? (
           <img
             src={posterUrl}
-            alt={`${movie.title} poster`}
+            alt=""
             loading="lazy"
             decoding="async"
             onLoad={() => setImageLoaded(true)}
+            onError={() => setImageFailed(true)}
             className={`h-full w-full object-cover transition-[opacity,transform] duration-500 ease-out group-hover:scale-[1.04] ${
               imageLoaded ? "opacity-100" : "opacity-0"
             }`}
           />
         ) : (
-          <div className="flex h-full items-center justify-center p-4 text-center text-sm text-[#77736B]">
+          <span className="flex h-full items-center justify-center p-4 text-center text-sm text-[#77736B]">
             Poster unavailable
-          </div>
+          </span>
         )}
 
-        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/85 via-black/20 to-transparent p-4 opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-          <p className="line-clamp-4 text-xs leading-relaxed text-white">
+        <span
+          className={`absolute inset-0 flex items-end bg-gradient-to-t from-black/85 via-black/20 to-transparent p-4 transition-opacity duration-300 group-hover:opacity-100 group-has-[:focus-visible]:opacity-100 ${
+            showOverview ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          <span className="line-clamp-4 block text-xs leading-relaxed text-white">
             {movie.overview || "No description available."}
-          </p>
-        </div>
-      </div>
+          </span>
+        </span>
+      </button>
 
       <div className="flex flex-1 flex-col border-b border-[#191916]/20 py-3">
         <div className="mb-2 flex items-center justify-between">

@@ -5,7 +5,7 @@ const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const SORT_PARAMS: Record<SortOption, string> = {
   rating: "vote_average.desc",
-  title: "original_title.asc",
+  title: "title.asc",
   newest: "primary_release_date.desc",
   oldest: "primary_release_date.asc",
 };
