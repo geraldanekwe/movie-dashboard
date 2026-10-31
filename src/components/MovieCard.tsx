@@ -26,7 +26,11 @@ function MovieCard({ movie }: MovieCardProps) {
       <button
         type="button"
         onClick={() => setShowOverview((open) => !open)}
-        onMouseLeave={() => setShowOverview(false)}
+        onMouseLeave={() => {
+          if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+            setShowOverview(false);
+          }
+        }}
         onBlur={() => setShowOverview(false)}
         aria-expanded={showOverview}
         aria-label={`${movie.title}, ${showOverview ? "hide" : "show"} synopsis`}
@@ -53,11 +57,11 @@ function MovieCard({ movie }: MovieCardProps) {
         )}
 
         <span
-          className={`absolute inset-0 flex items-end bg-gradient-to-t from-black/85 via-black/20 to-transparent p-4 transition-opacity duration-300 group-hover:opacity-100 group-has-[:focus-visible]:opacity-100 ${
+          className={`absolute inset-0 flex items-end overflow-y-auto bg-gradient-to-t from-black/90 via-black/60 to-black/20 p-3 transition-opacity duration-300 sm:p-4 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100 ${
             showOverview ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="line-clamp-4 block text-xs leading-relaxed text-white">
+          <span className="text-xs leading-relaxed text-white">
             {movie.overview || "No description available."}
           </span>
         </span>
