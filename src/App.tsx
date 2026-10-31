@@ -1,12 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 
 import Header from "./components/Header";
 import MovieGrid from "./components/MovieGrid";
 import FilterBar from "./components/FilterBar";
 import Pagination from "./components/Pagination";
 
-import { fetchDiscoverMovies } from "./services/tmdb";
-import type { Movie, SortOption } from "./types/movie";
+import { useMovies } from "./hooks/useMovies";
+import type { SortOption } from "./types/movie";
 
 const sortLabels: Record<SortOption, string> = {
   rating: "Sorted by audience rating",
@@ -16,42 +16,14 @@ const sortLabels: Record<SortOption, string> = {
 };
 
 function App() {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("rating");
-  const [reloadKey, setReloadKey] = useState(0);
-  const [resultsKey, setResultsKey] = useState(0);
 
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const loadMovies = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-
-        const data = await fetchDiscoverMovies(page, sortBy, controller.signal);
-
-        setMovies(data.results);
-        setTotalPages(data.total_pages);
-        setResultsKey((key) => key + 1);
-      } catch (err) {
-        if (controller.signal.aborted) return;
-        console.error("Failed to fetch movies:", err);
-        setError("Unable to load movies. Please try again.");
-      } finally {
-        if (!controller.signal.aborted) setLoading(false);
-      }
-    };
-
-    loadMovies();
-
-    return () => controller.abort();
-  }, [page, sortBy, reloadKey]);
+  const { movies, totalPages, loading, error, resultsKey, retry } = useMovies(
+    page,
+    sortBy,
+  );
 
   const filteredMovies = useMemo(() => {
     const query = searchQuery.trim().toLowerCase();
@@ -102,7 +74,7 @@ function App() {
             <div className="py-20 text-center">
               <p className="mb-4 text-sm text-[#B83E2E]">{error}</p>
               <button
-                onClick={() => setReloadKey((key) => key + 1)}
+                onClick={retry}
                 className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7]"
               >
                 Retry
