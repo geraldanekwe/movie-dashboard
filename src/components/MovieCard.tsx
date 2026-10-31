@@ -57,11 +57,11 @@ function MovieCard({ movie }: MovieCardProps) {
         )}
 
         <span
-          className={`absolute inset-0 flex items-end overflow-y-auto bg-gradient-to-t from-black/90 via-black/60 to-black/20 p-3 transition-opacity duration-300 sm:p-4 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100 ${
+          className={`absolute inset-0 flex flex-col overflow-y-auto bg-black/85 p-3 transition-opacity duration-300 sm:bg-transparent sm:bg-gradient-to-t sm:from-black/90 sm:via-black/60 sm:to-black/20 sm:p-4 sm:group-hover:opacity-100 sm:group-has-[:focus-visible]:opacity-100 ${
             showOverview ? "opacity-100" : "opacity-0"
           }`}
         >
-          <span className="text-xs leading-relaxed text-white">
+          <span className="mt-auto block text-[11px] leading-snug text-white sm:text-xs sm:leading-relaxed">
             {movie.overview || "No description available."}
           </span>
         </span>
