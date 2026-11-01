@@ -1,4 +1,4 @@
-import type { MovieResponse, SortOption } from "../types/movie";
+import type { Genre, MovieResponse, SortOption } from "../types/movie";
 
 const BASE_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -36,4 +36,26 @@ export async function fetchDiscoverMovies(
   }
 
   return response.json();
+}
+
+export async function fetchMovieGenres(signal?: AbortSignal): Promise<Genre[]> {
+  if (!API_KEY) {
+    throw new Error("TMDB API key is missing");
+  }
+
+  const params = new URLSearchParams({
+    api_key: API_KEY,
+  });
+
+  const response = await fetch(`${BASE_URL}/genre/movie/list?${params}`, {
+    signal,
+  });
+
+  if (!response.ok) {
+    throw new Error(`TMDB genre API error: ${response.status}`);
+  }
+
+  const data: { genres: Genre[] } = await response.json();
+
+  return data.genres;
 }

@@ -22,4 +22,9 @@ export interface MovieResponse {
   total_results: number;
 }
 
+export interface Genre {
+  id: number;
+  name: string;
+}
+
 export type SortOption = "rating" | "title" | "newest" | "oldest";
