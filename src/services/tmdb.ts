@@ -1,8 +1,5 @@
 import type { Genre, MovieResponse, SortOption } from "../types/movie";
 
-const BASE_URL = "https://api.themoviedb.org/3";
-const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-
 const SORT_PARAMS: Record<SortOption, string> = {
   rating: "vote_average.desc",
   title: "title.asc",
@@ -10,30 +7,14 @@ const SORT_PARAMS: Record<SortOption, string> = {
   oldest: "primary_release_date.asc",
 };
 
-export async function fetchDiscoverMovies(
-  page: number = 1,
-  sortBy: SortOption = "rating",
-  genreId: number | null = null,
+// Perform a GET request to the TMDB API through our own /api/tmdb endpoint.
+async function tmdbGet<T>(
+  path: string,
+  params: Record<string, string> = {},
   signal?: AbortSignal,
-): Promise<MovieResponse> {
-  if (!API_KEY) {
-    throw new Error("TMDB API key is missing");
-  }
-
-  const params = new URLSearchParams({
-    api_key: API_KEY,
-    sort_by: SORT_PARAMS[sortBy],
-    "vote_count.gte": "100",
-    page: String(page),
-  });
-
-  if (genreId !== null) {
-    params.set("with_genres", String(genreId));
-  }
-
-  const response = await fetch(`${BASE_URL}/discover/movie?${params}`, {
-    signal,
-  });
+): Promise<T> {
+  const query = new URLSearchParams({ path, ...params });
+  const response = await fetch(`/api/tmdb?${query}`, { signal });
 
   if (!response.ok) {
     throw new Error(`TMDB API error: ${response.status}`);
@@ -42,24 +23,31 @@ export async function fetchDiscoverMovies(
   return response.json();
 }
 
+export function fetchDiscoverMovies(
+  page: number = 1,
+  sortBy: SortOption = "rating",
+  genreId: number | null = null,
+  signal?: AbortSignal,
+): Promise<MovieResponse> {
+  const params: Record<string, string> = {
+    sort_by: SORT_PARAMS[sortBy],
+    "vote_count.gte": "100",
+    page: String(page),
+  };
+
+  if (genreId !== null) {
+    params.with_genres = String(genreId);
+  }
+
+  return tmdbGet<MovieResponse>("discover/movie", params, signal);
+}
+
 export async function fetchMovieGenres(signal?: AbortSignal): Promise<Genre[]> {
-  if (!API_KEY) {
-    throw new Error("TMDB API key is missing");
-  }
-
-  const params = new URLSearchParams({
-    api_key: API_KEY,
-  });
-
-  const response = await fetch(`${BASE_URL}/genre/movie/list?${params}`, {
+  const data = await tmdbGet<{ genres: Genre[] }>(
+    "genre/movie/list",
+    {},
     signal,
-  });
-
-  if (!response.ok) {
-    throw new Error(`TMDB genre API error: ${response.status}`);
-  }
-
-  const data: { genres: Genre[] } = await response.json();
+  );
 
   return data.genres;
 }
