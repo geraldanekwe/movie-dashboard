@@ -10,6 +10,13 @@ interface FilterBarProps {
   onGenreChange: (genreId: number | null) => void;
 }
 
+const sortLabels: Record<SortOption, string> = {
+  rating: "Sorted by audience rating",
+  title: "Sorted alphabetically",
+  newest: "Sorted by newest release",
+  oldest: "Sorted by oldest release",
+};
+
 function FilterBar({
   searchQuery,
   onSearchChange,
@@ -19,55 +26,82 @@ function FilterBar({
   selectedGenre,
   onGenreChange,
 }: FilterBarProps) {
+  const labelClass =
+    "mb-2 block text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736B]";
+
+  const selectClass =
+    "w-full border-b border-[#191916]/30 bg-transparent px-2 py-3 text-sm text-[#191916] outline-none transition-colors focus:border-[#B83E2E]";
+
   return (
-    <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-      <input
-        type="search"
-        value={searchQuery}
-        onChange={(event) => onSearchChange(event.target.value)}
-        placeholder="Filter this page by title..."
-        aria-label="Filter movies on this page by title"
-        className="w-full border-b border-[#191916]/30 bg-transparent px-1 py-3 text-sm text-[#191916] placeholder:text-[#77736B] outline-none transition-colors focus:border-[#B83E2E] sm:max-w-sm"
-      />
+    <div className="mb-8">
+      <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-xs font-bold uppercase tracking-[0.2em]">
+          Featured selection
+        </h2>
 
-      <select
-        id="filter-genre"
-        value={selectedGenre ?? ""}
-        onChange={(event) =>
-          onGenreChange(
-            event.target.value === "" ? null : Number(event.target.value),
-          )
-        }
-        className="border-b border-[#191916]/30 bg-transparent px-2 py-3 text-sm text-[#191916] outline-none transition-colors focus:border-[#B83E2E]"
-      >
-        <option value="">All genres</option>
+        <span className="text-[10px] uppercase tracking-widest text-[#77736B]">
+          {sortLabels[sortBy]}
+        </span>
+      </div>
 
-        {genres.map((genre) => (
-          <option key={genre.id} value={genre.id}>
-            {genre.name}
-          </option>
-        ))}
-      </select>
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
+        <div className="min-w-0">
+          <label htmlFor="movie-search" className={labelClass}>
+            Search movies
+          </label>
 
-      <div className="flex items-center gap-3">
-        <label
-          htmlFor="sort-movies"
-          className="shrink-0 text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736B]"
-        >
-          Sort by
-        </label>
+          <input
+            id="movie-search"
+            type="search"
+            value={searchQuery}
+            onChange={(event) => onSearchChange(event.target.value)}
+            placeholder="Filter this page by title..."
+            className={`${selectClass} px-1 placeholder:text-[#77736B]`}
+          />
+        </div>
 
-        <select
-          id="sort-movies"
-          value={sortBy}
-          onChange={(event) => onSortChange(event.target.value as SortOption)}
-          className="border-b border-[#191916]/30 bg-transparent px-2 py-3 text-sm text-[#191916] outline-none transition-colors focus:border-[#B83E2E]"
-        >
-          <option value="rating">Highest rated</option>
-          <option value="title">Title (A–Z)</option>
-          <option value="newest">Newest</option>
-          <option value="oldest">Oldest</option>
-        </select>
+        <div className="min-w-0">
+          <label htmlFor="filter-genre" className={labelClass}>
+            Genre
+          </label>
+
+          <select
+            id="filter-genre"
+            value={selectedGenre ?? ""}
+            onChange={(event) =>
+              onGenreChange(
+                event.target.value === "" ? null : Number(event.target.value),
+              )
+            }
+            className={selectClass}
+          >
+            <option value="">All genres</option>
+
+            {genres.map((genre) => (
+              <option key={genre.id} value={genre.id}>
+                {genre.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="min-w-0">
+          <label htmlFor="sort-movies" className={labelClass}>
+            Sort by
+          </label>
+
+          <select
+            id="sort-movies"
+            value={sortBy}
+            onChange={(event) => onSortChange(event.target.value as SortOption)}
+            className={selectClass}
+          >
+            <option value="rating">Highest rated</option>
+            <option value="title">Title (A–Z)</option>
+            <option value="newest">Newest</option>
+            <option value="oldest">Oldest</option>
+          </select>
+        </div>
       </div>
     </div>
   );

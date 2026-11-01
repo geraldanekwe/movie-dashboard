@@ -58,16 +58,6 @@ function App() {
 
       <main className="mx-auto max-w-7xl px-6 py-12">
         <section>
-          <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-xs font-bold uppercase tracking-[0.2em]">
-              Featured selection
-            </h2>
-
-            <span className="text-[10px] uppercase tracking-widest text-[#77736B]">
-              {sortLabels[sortBy]}
-            </span>
-          </div>
-
           <FilterBar
             searchQuery={searchQuery}
             onSearchChange={setSearchQuery}
