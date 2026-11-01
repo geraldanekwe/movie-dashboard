@@ -25,12 +25,6 @@ button {
   cursor: pointer;
 }
 
-.editorial-heading {
-  font-family: Georgia, "Times New Roman", serif;
-  font-weight: 400;
-  letter-spacing: -0.045em;
-}
-
 ::selection {
   background: #b83e2e;
   color: #ffffff;
