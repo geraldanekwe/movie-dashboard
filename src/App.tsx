@@ -5,6 +5,7 @@ import MovieGrid from "./components/MovieGrid";
 import FilterBar from "./components/FilterBar";
 import Pagination from "./components/Pagination";
 
+import { useGenres } from "./hooks/useGenres";
 import { useMovies } from "./hooks/useMovies";
 import type { SortOption } from "./types/movie";
 
@@ -19,6 +20,9 @@ function App() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("rating");
+  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
+
+  const { genres } = useGenres();
 
   const { movies, totalPages, loading, error, resultsKey, retry } = useMovies(
     page,
@@ -62,6 +66,9 @@ function App() {
             onSearchChange={setSearchQuery}
             sortBy={sortBy}
             onSortChange={handleSortChange}
+            genres={genres}
+            selectedGenre={selectedGenre}
+            onGenreChange={setSelectedGenre}
           />
 
           {loading && movies.length === 0 && (
