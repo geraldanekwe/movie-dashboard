@@ -1,3 +1,7 @@
+import { useEffect, useRef, useState } from "react";
+
+import CustomDropdown from "./CustomDropdown";
+
 import type { Genre, SortOption } from "../types/movie";
 
 interface FilterBarProps {
@@ -26,14 +30,38 @@ function FilterBar({
   selectedGenre,
   onGenreChange,
 }: FilterBarProps) {
+  const [openDropdown, setOpenDropdown] = useState<"genre" | "sort" | null>(
+    null,
+  );
+
+  const filterBarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        filterBarRef.current &&
+        !filterBarRef.current.contains(event.target as Node)
+      ) {
+        setOpenDropdown(null);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   const labelClass =
     "mb-2 block text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736B]";
 
-  const selectClass =
-    "w-full border-b border-[#191916]/30 bg-transparent px-2 py-3 text-sm text-[#191916] outline-none transition-colors focus:border-[#B83E2E]";
+  const toggleDropdown = (dropdown: "genre" | "sort") => {
+    setOpenDropdown((current) => (current === dropdown ? null : dropdown));
+  };
 
   return (
-    <div className="mb-8">
+    <div ref={filterBarRef} className="mb-8">
       <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <h2 className="text-xs font-bold uppercase tracking-[0.2em]">
           Featured selection
@@ -56,51 +84,45 @@ function FilterBar({
             value={searchQuery}
             onChange={(event) => onSearchChange(event.target.value)}
             placeholder="Filter this page by title..."
-            className={`${selectClass} px-1 placeholder:text-[#77736B]`}
+            className="w-full border-b border-[#191916]/30 bg-transparent px-1 py-3 text-sm text-[#191916] outline-none transition-colors placeholder:text-[#77736B] focus:border-[#B83E2E]"
           />
         </div>
 
         <div className="min-w-0">
-          <label htmlFor="filter-genre" className={labelClass}>
-            Genre
-          </label>
+          <label className={labelClass}>Genre</label>
 
-          <select
-            id="filter-genre"
-            value={selectedGenre ?? ""}
-            onChange={(event) =>
-              onGenreChange(
-                event.target.value === "" ? null : Number(event.target.value),
-              )
+          <CustomDropdown
+            value={selectedGenre === null ? "" : String(selectedGenre)}
+            onChange={(value) =>
+              onGenreChange(value === "" ? null : Number(value))
             }
-            className={selectClass}
-          >
-            <option value="">All genres</option>
-
-            {genres.map((genre) => (
-              <option key={genre.id} value={genre.id}>
-                {genre.name}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: "", label: "All genres" },
+              ...genres.map((genre) => ({
+                value: String(genre.id),
+                label: genre.name,
+              })),
+            ]}
+            isOpen={openDropdown === "genre"}
+            onToggle={() => toggleDropdown("genre")}
+          />
         </div>
 
         <div className="min-w-0">
-          <label htmlFor="sort-movies" className={labelClass}>
-            Sort by
-          </label>
+          <label className={labelClass}>Sort by</label>
 
-          <select
-            id="sort-movies"
+          <CustomDropdown
             value={sortBy}
-            onChange={(event) => onSortChange(event.target.value as SortOption)}
-            className={selectClass}
-          >
-            <option value="rating">Highest rated</option>
-            <option value="title">Title (A–Z)</option>
-            <option value="newest">Newest</option>
-            <option value="oldest">Oldest</option>
-          </select>
+            onChange={(value) => onSortChange(value as SortOption)}
+            options={[
+              { value: "rating", label: "Highest rated" },
+              { value: "title", label: "Title (A–Z)" },
+              { value: "newest", label: "Newest" },
+              { value: "oldest", label: "Oldest" },
+            ]}
+            isOpen={openDropdown === "sort"}
+            onToggle={() => toggleDropdown("sort")}
+          />
         </div>
       </div>
     </div>
