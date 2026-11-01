@@ -9,13 +9,6 @@ import { useGenres } from "./hooks/useGenres";
 import { useMovies } from "./hooks/useMovies";
 import type { SortOption } from "./types/movie";
 
-const sortLabels: Record<SortOption, string> = {
-  rating: "Sorted by audience rating",
-  title: "Sorted alphabetically",
-  newest: "Sorted by newest release",
-  oldest: "Sorted by oldest release",
-};
-
 function App() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
