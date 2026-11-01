@@ -3,7 +3,7 @@
 A responsive movie dashboard built with React, TypeScript, Vite, and Tailwind CSS. Movie data is provided by [The Movie Database (TMDB)](https://www.themoviedb.org/) API.
 
 
-<img width="1272" height="937" alt="Screenshot 2026-10-30 at 18 19 52" src="https://github.com/user-attachments/assets/288fc41b-c65f-4365-9be5-e5e305c766e4" />
+<img width="1296" height="929" alt="Screenshot 2026-11-01 at 12 27 52" src="https://github.com/user-attachments/assets/893fbc4b-b5c7-4dd5-9a85-1d8d15b4352a" />
 
 
 ## Features
