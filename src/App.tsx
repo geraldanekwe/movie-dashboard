@@ -12,7 +12,7 @@ import type { SortOption } from "./types/movie";
 function App() {
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("rating");
+  const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
 
   const { genres } = useGenres();
