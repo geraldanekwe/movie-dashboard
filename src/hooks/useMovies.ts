@@ -3,7 +3,11 @@ import { useCallback, useEffect, useState } from "react";
 import { fetchDiscoverMovies } from "../services/tmdb";
 import type { Movie, SortOption } from "../types/movie";
 
-export function useMovies(page: number, sortBy: SortOption) {
+export function useMovies(
+  page: number,
+  sortBy: SortOption,
+  genreId: number | null = null,
+) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -19,7 +23,12 @@ export function useMovies(page: number, sortBy: SortOption) {
         setLoading(true);
         setError(null);
 
-        const data = await fetchDiscoverMovies(page, sortBy, controller.signal);
+        const data = await fetchDiscoverMovies(
+          page,
+          sortBy,
+          genreId,
+          controller.signal,
+        );
 
         setMovies(data.results);
         setTotalPages(data.total_pages);
@@ -36,7 +45,7 @@ export function useMovies(page: number, sortBy: SortOption) {
     loadMovies();
 
     return () => controller.abort();
-  }, [page, sortBy, reloadKey]);
+  }, [page, sortBy, genreId, reloadKey]);
 
   const retry = useCallback(() => setReloadKey((key) => key + 1), []);
 

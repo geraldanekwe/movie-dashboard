@@ -13,6 +13,7 @@ const SORT_PARAMS: Record<SortOption, string> = {
 export async function fetchDiscoverMovies(
   page: number = 1,
   sortBy: SortOption = "rating",
+  genreId: number | null = null,
   signal?: AbortSignal,
 ): Promise<MovieResponse> {
   if (!API_KEY) {
@@ -21,11 +22,14 @@ export async function fetchDiscoverMovies(
 
   const params = new URLSearchParams({
     api_key: API_KEY,
-    with_genres: "16",
     sort_by: SORT_PARAMS[sortBy],
     "vote_count.gte": "100",
     page: String(page),
   });
+
+  if (genreId !== null) {
+    params.set("with_genres", String(genreId));
+  }
 
   const response = await fetch(`${BASE_URL}/discover/movie?${params}`, {
     signal,

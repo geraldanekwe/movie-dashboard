@@ -27,6 +27,7 @@ function App() {
   const { movies, totalPages, loading, error, resultsKey, retry } = useMovies(
     page,
     sortBy,
+    selectedGenre,
   );
 
   const filteredMovies = useMemo(() => {
@@ -41,6 +42,12 @@ function App() {
 
   const handleSortChange = (nextSort: SortOption) => {
     setSortBy(nextSort);
+    setSearchQuery("");
+    setPage(1);
+  };
+
+  const handleGenreChange = (genreId: number | null) => {
+    setSelectedGenre(genreId);
     setSearchQuery("");
     setPage(1);
   };
@@ -68,7 +75,7 @@ function App() {
             onSortChange={handleSortChange}
             genres={genres}
             selectedGenre={selectedGenre}
-            onGenreChange={setSelectedGenre}
+            onGenreChange={handleGenreChange}
           />
 
           {loading && movies.length === 0 && (
