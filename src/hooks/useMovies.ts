@@ -7,6 +7,7 @@ export function useMovies(
   page: number,
   sortBy: SortOption,
   genreId: number | null = null,
+  minRating: number | null = null,
 ) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,7 @@ export function useMovies(
           page,
           sortBy,
           genreId,
+          minRating,
           controller.signal,
         );
 
@@ -45,7 +47,7 @@ export function useMovies(
     loadMovies();
 
     return () => controller.abort();
-  }, [page, sortBy, genreId, reloadKey]);
+  }, [page, sortBy, genreId, minRating, reloadKey]);
 
   const retry = useCallback(() => setReloadKey((key) => key + 1), []);
 

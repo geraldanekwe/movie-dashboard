@@ -12,6 +12,9 @@ interface FilterBarProps {
   genres: Genre[];
   selectedGenre: number | null;
   onGenreChange: (genreId: number | null) => void;
+  selectedRating: number | null;
+  onRatingChange: (rating: number | null) => void;
+  onClearAllFilters: () => void;
 }
 
 const sortLabels: Record<SortOption, string> = {
@@ -19,6 +22,15 @@ const sortLabels: Record<SortOption, string> = {
   title: "Sorted alphabetically",
   newest: "Sorted by newest release",
   oldest: "Sorted by oldest release",
+};
+
+const ratingLabels: Record<number, string> = {
+  5: "5+ rating",
+  6: "6+ rating",
+  7: "7+ rating",
+  8: "8+ rating",
+  9: "9+ rating",
+  10: "10 rating",
 };
 
 function FilterBar({
@@ -29,10 +41,13 @@ function FilterBar({
   genres,
   selectedGenre,
   onGenreChange,
+  selectedRating,
+  onRatingChange,
+  onClearAllFilters,
 }: FilterBarProps) {
-  const [openDropdown, setOpenDropdown] = useState<"genre" | "sort" | null>(
-    null,
-  );
+  const [openDropdown, setOpenDropdown] = useState<
+    "genre" | "sort" | "rating" | null
+  >(null);
 
   const filterBarRef = useRef<HTMLDivElement>(null);
 
@@ -56,7 +71,7 @@ function FilterBar({
   const labelClass =
     "mb-2 block text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736B]";
 
-  const toggleDropdown = (dropdown: "genre" | "sort") => {
+  const toggleDropdown = (dropdown: "genre" | "sort" | "rating") => {
     setOpenDropdown((current) => (current === dropdown ? null : dropdown));
   };
 
@@ -109,6 +124,26 @@ function FilterBar({
         </div>
 
         <div className="min-w-0">
+          <label className={labelClass}>Rating</label>
+
+          <CustomDropdown
+            value={selectedRating === null ? "" : String(selectedRating)}
+            onChange={(value) =>
+              onRatingChange(value === "" ? null : Number(value))
+            }
+            options={[
+              { value: "", label: "All ratings" },
+              ...Object.entries(ratingLabels).map(([key, label]) => ({
+                value: key,
+                label,
+              })),
+            ]}
+            isOpen={openDropdown === "rating"}
+            onToggle={() => toggleDropdown("rating")}
+          />
+        </div>
+
+        <div className="min-w-0">
           <label className={labelClass}>Sort by</label>
 
           <CustomDropdown
@@ -124,6 +159,13 @@ function FilterBar({
             onToggle={() => toggleDropdown("sort")}
           />
         </div>
+
+        <button
+          onClick={onClearAllFilters}
+          className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7]"
+        >
+          Clear all filters
+        </button>
       </div>
     </div>
   );

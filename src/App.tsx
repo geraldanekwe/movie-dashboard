@@ -14,6 +14,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("newest");
   const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
+  const [selectedRating, setSelectedRating] = useState<number | null>(null);
 
   const { genres } = useGenres();
 
@@ -21,6 +22,7 @@ function App() {
     page,
     sortBy,
     selectedGenre,
+    selectedRating,
   );
 
   const filteredMovies = useMemo(() => {
@@ -45,6 +47,19 @@ function App() {
     setPage(1);
   };
 
+  const handleRatingChange = (rating: number | null) => {
+    setSelectedRating(rating);
+    setSearchQuery("");
+    setPage(1);
+  };
+
+  const handleClearAllFilters = () => {
+    setSearchQuery("");
+    setSelectedGenre(null);
+    setSelectedRating(null);
+    setPage(1);
+  };
+
   return (
     <div className="min-h-screen bg-[#F2EFE7]">
       <Header />
@@ -59,6 +74,9 @@ function App() {
             genres={genres}
             selectedGenre={selectedGenre}
             onGenreChange={handleGenreChange}
+            selectedRating={selectedRating}
+            onRatingChange={handleRatingChange}
+            onClearAllFilters={handleClearAllFilters}
           />
 
           {loading && movies.length === 0 && (

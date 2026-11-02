@@ -27,6 +27,7 @@ export function fetchDiscoverMovies(
   page: number = 1,
   sortBy: SortOption = "rating",
   genreId: number | null = null,
+  minRating: number | null = null,
   signal?: AbortSignal,
 ): Promise<MovieResponse> {
   const params: Record<string, string> = {
@@ -34,6 +35,10 @@ export function fetchDiscoverMovies(
     "vote_count.gte": "100",
     page: String(page),
   };
+
+  if (minRating !== null) {
+    params["vote_average.gte"] = String(minRating);
+  }
 
   if (genreId !== null) {
     params.with_genres = String(genreId);
