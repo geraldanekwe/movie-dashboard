@@ -7,14 +7,21 @@ import Pagination from "./components/Pagination";
 
 import { useGenres } from "./hooks/useGenres";
 import { useMovies } from "./hooks/useMovies";
+import { useLocalStorage } from "./hooks/useLocalStorage";
 import type { SortOption } from "./types/movie";
 
 function App() {
   const [page, setPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState<SortOption>("newest");
-  const [selectedGenre, setSelectedGenre] = useState<number | null>(null);
-  const [selectedRating, setSelectedRating] = useState<number | null>(null);
+  const [searchQuery, setSearchQuery] = useLocalStorage("searchQuery", "");
+  const [sortBy, setSortBy] = useLocalStorage<SortOption>("sortBy", "newest");
+  const [selectedGenre, setSelectedGenre] = useLocalStorage<number | null>(
+    "selectedGenre",
+    null,
+  );
+  const [selectedRating, setSelectedRating] = useLocalStorage<number | null>(
+    "selectedRating",
+    null,
+  );
 
   const { genres } = useGenres();
 
