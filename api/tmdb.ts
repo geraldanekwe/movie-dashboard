@@ -13,8 +13,19 @@ interface ApiResponse {
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 
 // Only these endpoints and query parameters can be reached through the proxy.
-const ALLOWED_PATHS = new Set(["discover/movie", "genre/movie/list"]);
-const ALLOWED_PARAMS = ["page", "sort_by", "vote_count.gte", "with_genres"];
+const ALLOWED_PATHS = new Set([
+  "discover/movie",
+  "genre/movie/list",
+  "search/movie",
+]);
+const ALLOWED_PARAMS = [
+  "page",
+  "sort_by",
+  "vote_count.gte",
+  "vote_average.gte",
+  "with_genres",
+  "query",
+];
 
 function first(value: string | string[] | undefined): string | undefined {
   return Array.isArray(value) ? value[0] : value;

@@ -56,3 +56,16 @@ export async function fetchMovieGenres(signal?: AbortSignal): Promise<Genre[]> {
 
   return data.genres;
 }
+
+export function fetchSearchMovies(
+  query: string,
+  page: number = 1,
+  signal?: AbortSignal,
+): Promise<MovieResponse> {
+  const params: Record<string, string> = {
+    query,
+    page: String(page),
+  };
+
+  return tmdbGet<MovieResponse>("search/movie", params, signal);
+}

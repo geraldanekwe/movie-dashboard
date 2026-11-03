@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-import { fetchDiscoverMovies } from "../services/tmdb";
+import { fetchDiscoverMovies, fetchSearchMovies } from "../services/tmdb";
 import type { Movie, SortOption } from "../types/movie";
 
 export function useMovies(
@@ -8,6 +8,7 @@ export function useMovies(
   sortBy: SortOption,
   genreId: number | null = null,
   minRating: number | null = null,
+  searchQuery: string = "",
 ) {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
@@ -24,13 +25,15 @@ export function useMovies(
         setLoading(true);
         setError(null);
 
-        const data = await fetchDiscoverMovies(
-          page,
-          sortBy,
-          genreId,
-          minRating,
-          controller.signal,
-        );
+        const data = searchQuery.trim()
+          ? await fetchSearchMovies(searchQuery.trim(), page, controller.signal)
+          : await fetchDiscoverMovies(
+              page,
+              sortBy,
+              genreId,
+              minRating,
+              controller.signal,
+            );
 
         setMovies(data.results);
         setTotalPages(data.total_pages);
@@ -47,7 +50,7 @@ export function useMovies(
     loadMovies();
 
     return () => controller.abort();
-  }, [page, sortBy, genreId, minRating, reloadKey]);
+  }, [page, sortBy, genreId, minRating, searchQuery, reloadKey]);
 
   const retry = useCallback(() => setReloadKey((key) => key + 1), []);
 

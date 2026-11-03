@@ -8,6 +8,7 @@ import Pagination from "./components/Pagination";
 import { useGenres } from "./hooks/useGenres";
 import { useMovies } from "./hooks/useMovies";
 import { useLocalStorage } from "./hooks/useLocalStorage";
+import { useDebounce } from "./hooks/useDebounce";
 import type { SortOption } from "./types/movie";
 
 function App() {
@@ -25,11 +26,14 @@ function App() {
 
   const { genres } = useGenres();
 
+  const debouncedSearchQuery = useDebounce(searchQuery, 400);
+
   const { movies, totalPages, loading, error, resultsKey, retry } = useMovies(
     page,
     sortBy,
     selectedGenre,
     selectedRating,
+    debouncedSearchQuery,
   );
 
   const filteredMovies = useMemo(() => {
