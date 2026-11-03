@@ -87,7 +87,7 @@ function FilterBar({
         </span>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-3 sm:gap-8">
+      <div className="grid grid-cols-1 gap-6 sm:grid-cols-4 sm:gap-8">
         <div className="min-w-0">
           <label htmlFor="movie-search" className={labelClass}>
             Search movies
@@ -160,12 +160,14 @@ function FilterBar({
           />
         </div>
 
-        <button
-          onClick={onClearAllFilters}
-          className="border border-[#191916]/30 px-4 py-2 text-xs font-semibold uppercase tracking-wider transition-colors hover:bg-[#191916] hover:text-[#F2EFE7]"
-        >
-          Clear all filters
-        </button>
+        <div className="flex items-center">
+          <button
+            onClick={onClearAllFilters}
+            className="border px-4 py-2 text-[14px] font-bold uppercase tracking-wider text-[#77736B] hover:text-[#B83E2E]"
+          >
+            Clear all filters
+          </button>
+        </div>
       </div>
     </div>
   );
