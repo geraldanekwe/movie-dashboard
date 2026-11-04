@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface PaginationProps {
   page: number;
@@ -11,10 +11,6 @@ const buttonClass =
 
 function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   const [inputPage, setInputPage] = useState(String(page));
-
-  useEffect(() => {
-    setInputPage(String(page));
-  }, [page]);
 
   const handlePageSubmit = () => {
     const nextPage = Number(inputPage);
@@ -30,7 +26,10 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
   return (
     <nav aria-label="Pagination" className="flex items-center gap-4">
       <button
-        onClick={() => onPageChange(Math.max(1, page - 1))}
+        onClick={() => {
+          setInputPage(String(Math.max(1, page - 1)));
+          onPageChange(Math.max(1, page - 1));
+        }}
         disabled={page === 1}
         aria-label="Previous page"
         className={buttonClass}
@@ -64,7 +63,10 @@ function Pagination({ page, totalPages, onPageChange }: PaginationProps) {
       </form>
 
       <button
-        onClick={() => onPageChange(Math.min(totalPages, page + 1))}
+        onClick={() => {
+          setInputPage(String(Math.min(totalPages, page + 1)));
+          onPageChange(Math.min(totalPages, page + 1));
+        }}
         disabled={page >= totalPages}
         aria-label="Next page"
         className={buttonClass}
