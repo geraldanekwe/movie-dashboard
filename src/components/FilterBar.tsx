@@ -159,15 +159,15 @@ function FilterBar({
             onToggle={() => toggleDropdown("sort")}
           />
         </div>
+      </div>
 
-        <div className="flex items-center">
-          <button
-            onClick={onClearAllFilters}
-            className="border px-4 py-2 text-[14px] font-bold uppercase tracking-wider text-[#77736B] hover:text-[#B83E2E]"
-          >
-            Clear all filters
-          </button>
-        </div>
+      <div className="mt-5 flex justify-center">
+        <button
+          onClick={onClearAllFilters}
+          className="text-[10px] font-semibold uppercase tracking-[0.15em] text-[#77736B] transition-colors hover:text-[#B83E2E]"
+        >
+          Clear all filters
+        </button>
       </div>
     </div>
   );

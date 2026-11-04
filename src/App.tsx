@@ -66,6 +66,7 @@ function App() {
 
   const handleClearAllFilters = () => {
     setSearchQuery("");
+    setSortBy("newest");
     setSelectedGenre(null);
     setSelectedRating(null);
     setPage(1);
